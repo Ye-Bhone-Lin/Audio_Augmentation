@@ -1,6 +1,5 @@
 import nlpaug.augmenter.audio as naa
 import numpy as np
-import librosa
 
 class AudioAugmentationPipeline:
     def __init__(self, sr):
@@ -33,11 +32,4 @@ class AudioAugmentationPipeline:
         return np.array(augmented_data)
 
 
-file_path = 'recording_20250622_180044.wav'
-data, sr = librosa.load(file_path)
 
-pipeline = AudioAugmentationPipeline(sr)
-
-chosen_augmentation = 'pitch'  
-
-augmented_audio = pipeline.augment(data, chosen_augmentation)
