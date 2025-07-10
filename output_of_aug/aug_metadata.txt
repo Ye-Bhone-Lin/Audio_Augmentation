@@ -1,0 +1,2 @@
+D:\ASR_Augmentation\output_of_aug\noise\noise_recording_20250704_180312.wav|ဒါပေမဲ့ ကင်ဆာ ရောဂါ ကြီးထွား လာ ပြီး အန္တရာယ် ရှိ နေ တဲ့ လူတချို့ ရှိ တယ် ။
+D:\ASR_Augmentation\output_of_aug\pitch\pitch_recording_20250704_180312.wav|ဒါပေမဲ့ ကင်ဆာ ရောဂါ ကြီးထွား လာ ပြီး အန္တရာယ် ရှိ နေ တဲ့ လူတချို့ ရှိ တယ် ။
