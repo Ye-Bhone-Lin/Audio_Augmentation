@@ -87,3 +87,57 @@ class Augmentation:
                     meta_out.write(f"{out_path.resolve()}|{text.strip()}\n")
 
                     print(f"Augmented: {out_path}")
+
+class HF_Augmentation:
+    def __init__(self, metadata_path, output_dir, sr=16000):
+        self.metadata_path = Path(metadata_path)
+        self.output_dir = Path(output_dir)
+        self.sr = sr
+        self.pipeline = AudioAugmentationPipeline(sr=sr)
+
+        with open(metadata_path, "r", encoding="utf-8", newline='') as f:
+            reader = csv.reader(f, delimiter='\t')
+            self.entries = [row for row in reader if len(row) >= 2]
+
+    def augment(self, percent, methods):
+        total = len(self.entries)
+        sample_count = max(1, int(total * percent / 100))
+        selected = random.sample(self.entries, sample_count)
+
+        aug_meta_path = self.output_dir / "aug_metadata.txt"
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+
+        for method in methods:
+            method_dir = self.output_dir / method
+            method_dir.mkdir(exist_ok=True)
+
+            with open(aug_meta_path, "w", encoding="utf-8") as meta_out:
+                for wav_path_str, text in selected:
+                    wav_path = Path(wav_path_str).resolve()
+
+                    if not wav_path.exists():
+                        print(f"Warning: file not found: {wav_path}")
+                        continue
+
+                    data, sr = sf.read(wav_path)
+                    if sr != self.sr:
+                        print(f"Warning: sample rate mismatch for {wav_path}: expected {self.sr}, got {sr}")
+
+                    augmented = self.pipeline.augment(data, method)
+
+                    if augmented.ndim == 2:
+                        augmented = augmented.T
+                        if augmented.shape[1] == 1:
+                            augmented = augmented.squeeze()
+
+                    max_val = np.max(np.abs(augmented))
+                    if max_val > 0:
+                        augmented = augmented / max_val * 0.8
+
+                    out_filename = f"{method}_{wav_path.name}"
+                    out_path = method_dir / out_filename
+                    sf.write(out_path, augmented.astype(np.float32), self.sr, format="WAV", subtype="PCM_16")
+
+                    meta_out.write(f"{out_path.resolve()}\t{text.strip()}\n")
+
+                    print(f"Augmented: {out_path}")

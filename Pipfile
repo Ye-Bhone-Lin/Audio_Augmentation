@@ -12,6 +12,8 @@ datasets = "*"
 torchcodec = "*"
 numpy = "*"
 soundfile = "*"
+ffmpeg-python = "*"
+torchaudio = "*"
 
 [dev-packages]
 ipykernel = "*"
