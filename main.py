@@ -1,19 +1,14 @@
-from src.utils.pipeline import AudioAugmentationPipeline
-import os 
-import librosa 
+from src.utils.pipeline import  Augmentation,HF_Augmentation
+from src.utils.spectogram_aug_pipeline import  SpectrogramAugmentation,HF_SpectrogramAugmentation
 
-dir = "D:\\ASR_Augmentation\\src\\test_data"
+#pipeline = Augmentation("metadata.txt", "output_of_aug")
+#pipeline.augment(1, ["noise", "pitch"])
 
-file_path = os.path.join(dir, "recording_20250622_180044.wav")
-#print(file_path)
+#pipeline = HF_Augmentation("/content/mig_burmese_metadata.tsv", "output_of_aug")
+#pipeline.augment(1, ["noise", "pitch"])
 
-data, sr = librosa.load(file_path)
+#spec_pipeline = SpectrogramAugmentation("metadata.txt", "output_of_aug")
+#spec_pipeline.augment(1, ["time_mask", "freq_mask"])
 
-pipeline = AudioAugmentationPipeline(sr)
-
-chosen_augmentation = 'pitch'  
-
-augmented_audio = pipeline.augment(data, chosen_augmentation)
-
-#print(augmented_audio)
-
+spec_pipeline = HF_SpectrogramAugmentation("mig_burmese_metadata.tsv", "output_of_aug")
+spec_pipeline.augment(1, ["time_mask", "freq_mask"])
