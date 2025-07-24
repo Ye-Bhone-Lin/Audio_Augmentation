@@ -108,11 +108,11 @@ class HF_Augmentation:
         aug_meta_path = self.output_dir / "aug_metadata.txt"
         self.output_dir.mkdir(parents=True, exist_ok=True)
 
-        for method in methods:
-            method_dir = self.output_dir / method
-            method_dir.mkdir(exist_ok=True)
+        with open(aug_meta_path, "w", encoding="utf-8") as meta_out:
+            for method in methods:
+                method_dir = self.output_dir / method
+                method_dir.mkdir(exist_ok=True)
 
-            with open(aug_meta_path, "w", encoding="utf-8") as meta_out:
                 for wav_path_str, text in selected:
                     wav_path = Path(wav_path_str).resolve()
 
