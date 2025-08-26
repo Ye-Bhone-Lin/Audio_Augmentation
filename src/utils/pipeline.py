@@ -142,3 +142,56 @@ class HF_Augmentation:
                     meta_out.write(f"{out_path.resolve()}\t{text.strip()}\n")
 
                     print(f"Augmented: {out_path}")
+
+class SingleAugHF:
+    def __init__(self, metadata_path, output_dir, sr=16000):
+        self.metadata_path = Path(metadata_path)
+        self.output_dir = Path(output_dir)
+        self.sr = sr
+        self.pipeline = AudioAugmentationPipeline(sr=sr)
+
+        with open(metadata_path, "r", encoding="utf-8", newline='') as f:
+            reader = csv.reader(f, delimiter='\t')
+            self.entries = [row for row in reader if len(row) >= 2]
+
+    # --- Add this method ---
+    def augment_single(self, audio_path_str, method, text=""):
+        """
+        Augment a single audio file using the specified method.
+        """
+        self.output_dir.mkdir(parents=True, exist_ok=True)
+        method_dir = self.output_dir / method
+        method_dir.mkdir(exist_ok=True)
+
+        wav_path = Path(audio_path_str).resolve()
+        if not wav_path.exists():
+            print(f"Warning: file not found: {wav_path}")
+            return
+
+        # Load audio
+        data, sr = sf.read(wav_path)
+        if sr != self.sr:
+            print(f"Warning: sample rate mismatch for {wav_path}: expected {self.sr}, got {sr}")
+
+        # Apply augmentation
+        augmented = self.pipeline.augment(data, method)
+
+        if augmented.ndim == 2:
+            augmented = augmented.T
+            if augmented.shape[1] == 1:
+                augmented = augmented.squeeze()
+
+        max_val = np.max(np.abs(augmented))
+        if max_val > 0:
+            augmented = augmented / max_val * 0.8
+
+        out_filename = f"{method}_{wav_path.name}"
+        out_path = method_dir / out_filename
+        sf.write(out_path, augmented.astype(np.float32), self.sr, format="WAV", subtype="PCM_16")
+
+        if text:
+            aug_meta_path = self.output_dir / "aug_metadata.txt"
+            with open(aug_meta_path, "a", encoding="utf-8") as f:
+                f.write(f"{out_path.resolve()}\t{text.strip()}\n")
+
+        print(f"Augmented: {out_path}")
