@@ -1,4 +1,4 @@
-# ASR Audio Augmentation Pipeline
+# Audio Augmentation Pipeline
 
 This project provides a flexible and extensible pipeline for augmenting audio datasets, especially for Automatic Speech Recognition (ASR) tasks. It supports waveform and spectrogram augmentations, works with both local metadata and HuggingFace datasets, and outputs both augmented audio and updated metadata.
 

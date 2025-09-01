@@ -1,3 +1,10 @@
+"""
+Audio  Augmentation on a HuggingFace dataset's audio column & Local Dataset 
+Author: Ye Bhone Lin
+Date: 1st Sep 2025
+"""
+
+
 import csv
 from pathlib import Path
 import random
@@ -154,7 +161,6 @@ class SingleAugHF:
             reader = csv.reader(f, delimiter='\t')
             self.entries = [row for row in reader if len(row) >= 2]
 
-    # --- Add this method ---
     def augment_single(self, audio_path_str, method, text=""):
         """
         Augment a single audio file using the specified method.
