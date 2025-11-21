@@ -67,31 +67,25 @@ class Augmentation:
                         print(f"Warning: file not found: {wav_path}")
                         continue
 
-                    # Read audio
                     data, sr = sf.read(wav_path)
                     if sr != self.sr:
                         print(f"Warning: sample rate mismatch for {wav_path}: expected {self.sr}, got {sr}")
 
-                    # Augment audio
                     augmented = self.pipeline.augment(data, method)
 
-                    # Fix shape for soundfile.write
                     if augmented.ndim == 2:
                         augmented = augmented.T
                         if augmented.shape[1] == 1:
                             augmented = augmented.squeeze()
 
-                    # Normalize audio to avoid silence
                     max_val = np.max(np.abs(augmented))
                     if max_val > 0:
                         augmented = augmented / max_val * 0.8
 
-                    # Save new file
                     out_filename = f"{method}_{wav_path.name}"
                     out_path = method_dir / out_filename
                     sf.write(out_path, augmented.astype(np.float32), self.sr, format="WAV", subtype="PCM_16")
 
-                    # Write to new metadata
                     meta_out.write(f"{out_path.resolve()}|{text.strip()}\n")
 
                     print(f"Augmented: {out_path}")

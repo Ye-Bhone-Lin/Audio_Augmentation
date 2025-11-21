@@ -7,7 +7,6 @@ import librosa
 import cv2
 from scipy.signal import istft
 
-# === Spectrogram Augmentation Functions ===
 def time_mask(mel, width=30):
     aug = mel.copy()
     t = np.random.randint(0, width)
@@ -72,7 +71,6 @@ def patch_swap(mel, patch_size=(10, 10)):
     return mel
 
 
-# === Spectrogram Augmentation Pipeline ===
 class SpectrogramAugmentationPipeline:
     def __init__(self, sr):
         self.sr = sr
@@ -134,7 +132,6 @@ class SpectrogramAugmentation:
 
                     aug_spec = self.pipeline.augment(log_mel_spec, method)
 
-                    # Inverse mel and save
                     mel_spec_recon = librosa.db_to_power(aug_spec)
                     y_recon = librosa.feature.inverse.mel_to_audio(mel_spec_recon, sr=self.sr)
 
@@ -184,7 +181,6 @@ class HF_SpectrogramAugmentation:
 
                     aug_spec = self.pipeline.augment(log_mel_spec, method)
 
-                    # Inverse mel and save
                     mel_spec_recon = librosa.db_to_power(aug_spec)
                     y_recon = librosa.feature.inverse.mel_to_audio(mel_spec_recon, sr=self.sr)
 
