@@ -1,5 +1,5 @@
-from src.utils.pipeline import  Augmentation,HF_Augmentation
-from src.utils.spectogram_aug_pipeline import  SpectrogramAugmentation,HF_SpectrogramAugmentation
+from src.wave_augmentation.pipeline import  Augmentation,HF_Augmentation
+from src.spectogram_augmentation.spectogram_aug_pipeline import  SpectrogramAugmentation,HF_SpectrogramAugmentation
 
 #pipeline = Augmentation("metadata.txt", "output_of_aug")
 #pipeline.augment(1, ["noise", "pitch"])
