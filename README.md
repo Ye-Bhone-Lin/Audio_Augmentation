@@ -45,23 +45,6 @@ This project provides a flexible and extensible pipeline for augmenting audio da
 | band_drop                 | Drops random frequency bands                           |
 | patch_swap                | Swaps random patches in the spectrogram                |
 
----
-
-## Project Structure
-
-```
-ASR_Augmentation/
-│
-├── main.py
-└── src/
-    └── utils/
-        ├── pipeline.py
-        ├── spectogram_aug_pipeline.py
-        ├── HuggingFace_dataset_loader.ipynb
-        └── test_data/
-```
-
----
 
 ## Usage
 
@@ -105,6 +88,44 @@ spec_pipeline.augment(10, ["time_mask", "freq_mask"])
 - Change the percentage and augmentation methods as needed.
 - Output will be in `output_of_aug/` with subfolders for each augmentation.
 
+# 3. In Google Colab
+```
+!git clone https://github.com/Ye-Bhone-Lin/Audio_Augmentation.git
+```
+
+#### Data Format
+
+```
+from Audio_Augmentation.src.dataset_preparation.data_format_to_aug import AudioTSVWriter
+
+writer = AudioTSVWriter(
+    output_dir="audio_files",
+    tsv_path="mig_burmese_metadata.tsv"
+)
+
+writer.write_split(speech_data['test'])  # or ['train'] speech_data = huggingface dataset
+```
+
+```
+from Audio_Augmentation.src.wave_augmentation.pipeline import  Augmentation, HF_Augmentation
+
+tech = ["noise", "pitch","loudness","shift",'speed']
+pipeline = HF_Augmentation("tsv file", "output_path")
+pipeline.augment(1, tech) # 1 = augmentation percentage
+```
+
+```
+from Audio_Augmentation.src.spectogram_augmentation.spec_after_wav_aug import SpecAugmentationAfterWav
+
+base_input_dir = "output_path"  # folder containing speed/, pitch/, etc.
+base_output_dir = "spec_augmented"
+
+spec_methods = ['time_mask', 'freq_mask']
+
+pipeline = SpecAugmentationAfterWav(base_input_dir, base_output_dir)
+pipeline.augment(spec_methods)
+```
+
 ---
 
 ## Output
@@ -138,9 +159,9 @@ pip install numpy soundfile librosa nlpaug
 
 ---
 
-## Extending
+## Updated
 
 - Add new augmentation methods in `pipeline.py` or `spectogram_aug_pipeline.py`.
 - Use your own metadata or HuggingFace datasets.
-
+- Added to apply spec augmentation after wav form augmentation (First run wav form augmentation after that use spec_after_wav_aug.py)
 ---
