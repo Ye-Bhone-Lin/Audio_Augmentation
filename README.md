@@ -106,6 +106,9 @@ writer = AudioTSVWriter(
 writer.write_split(speech_data['test'])  # or ['train'] speech_data = huggingface dataset
 ```
 
+#### Wav Augmentation
+
+
 ```
 from Audio_Augmentation.src.wave_augmentation.pipeline import  Augmentation, HF_Augmentation
 
@@ -113,6 +116,8 @@ tech = ["noise", "pitch","loudness","shift",'speed']
 pipeline = HF_Augmentation("tsv file", "output_path")
 pipeline.augment(1, tech) # 1 = augmentation percentage
 ```
+
+#### Spec Augmentation
 
 ```
 from Audio_Augmentation.src.spectogram_augmentation.spec_after_wav_aug import SpecAugmentationAfterWav
