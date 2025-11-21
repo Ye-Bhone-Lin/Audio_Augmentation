@@ -95,7 +95,7 @@ spec_pipeline.augment(10, ["time_mask", "freq_mask"])
 
 #### Data Format
 
-```
+```python
 from Audio_Augmentation.src.dataset_preparation.data_format_to_aug import AudioTSVWriter
 
 writer = AudioTSVWriter(
@@ -109,7 +109,7 @@ writer.write_split(speech_data['test'])  # or ['train'] speech_data = huggingfac
 #### Wav Augmentation
 
 
-```
+```python
 from Audio_Augmentation.src.wave_augmentation.pipeline import  Augmentation, HF_Augmentation
 
 tech = ["noise", "pitch","loudness","shift",'speed']
@@ -119,7 +119,7 @@ pipeline.augment(1, tech) # 1 = augmentation percentage
 
 #### Spec Augmentation
 
-```
+```python
 from Audio_Augmentation.src.spectogram_augmentation.spec_after_wav_aug import SpecAugmentationAfterWav
 
 base_input_dir = "output_path"  # folder containing speed/, pitch/, etc.
