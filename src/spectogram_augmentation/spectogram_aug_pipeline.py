@@ -55,10 +55,25 @@ def resize_crop(mel, scale_range=(0.8, 1.2)):
 def dynamic_range_compression(mel, C=1, clip_val=1e-5):
     return np.log10(C * np.maximum(mel, clip_val))
 
-def band_drop(mel, prob=0.1):
-    mask = np.random.rand(mel.shape[0]) < prob
-    mel[mask, :] = 0
+def band_drop(
+    mel,
+    prob=0.3,
+    num_masks=2,
+    max_width=8
+):
+    if np.random.rand() > prob:
+        return mel
+
+    mel = mel.copy()
+    n_mels = mel.shape[0]
+
+    for _ in range(num_masks):
+        width = np.random.randint(1, max_width + 1)
+        start = np.random.randint(0, n_mels - width)
+        mel[start:start + width, :] = 0
+
     return mel
+
 
 def patch_swap(mel, patch_size=(10, 10)):
     h, w = mel.shape
